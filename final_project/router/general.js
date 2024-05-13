@@ -22,32 +22,60 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-    res.send(JSON.stringify(books,null,4));
+    return res.send(JSON.stringify(books,null,4));
 
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
     const isbn = req.params.isbn;
-    res.send(books[isbn])
+    return res.send(books[isbn])
  });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    const author = req.params.author;
+  
+    // Find books by author
+    const authorBooks = [];
+    for (const bookId in books) {
+      if (books[bookId].author.toLowerCase() === author.toLowerCase()) {
+        authorBooks.push(books[bookId]);
+      }
+    }
+  
+    // Check if any books found
+    if (authorBooks.length > 0) {
+      res.json(authorBooks);
+    } else {
+      res.status(404).send(`No books found by author: ${author}`);
+    }
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    const title = req.params.title;
+  
+    // Find books by author
+    const titleBooks = [];
+    for (const bookId in books) {
+      if (books[bookId].title.toLowerCase() === title.toLowerCase()) {
+        titleBooks.push(books[bookId]);
+      }
+    }
+  
+    // Check if any books found
+    if (titleBooks.length > 0) {
+      res.json(titleBooks);
+    } else {
+      res.status(404).send(`No books found by the title: ${title}`);
+    }
 });
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    const isbn = req.params.isbn;
+    return res.send(books[isbn].reviews)
 });
 
 module.exports.general = public_users;
